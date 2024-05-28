@@ -1,0 +1,15 @@
+{
+    "name": "fartplan.dplozner",
+    "description": "fahr plan",
+    "architecture": "@CLICK_ARCH@",
+    "title": "fartplan",
+    "hooks": {
+        "fartplan": {
+            "apparmor": "fartplan.apparmor",
+            "desktop":  "fartplan.desktop"
+        }
+    },
+    "version": "1.0.0",
+    "maintainer": "Davide Plozner <davide.plozner@etik.com>",
+    "framework" : "@CLICK_FRAMEWORK@"
+}
