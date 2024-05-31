@@ -14,22 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Copyright (C) 2024  Davide Plozner
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * fartplan is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import QtQuick 2.7
 import Lomiri.Components 1.3
 import QtQuick.Controls 2.2
@@ -63,6 +47,7 @@ Page {
                 width: parent.width - 20
                 placeholderText: "Departure"
                 onTextChanged: {
+
                     for (var i = 0; i < locationButtons1.children.length; i++) {
                         locationButtons1.children[i].destroy();
                     }
@@ -74,8 +59,32 @@ Page {
                         if (xhr.readyState === XMLHttpRequest.DONE) {
                             try {
                                 var locations = JSON.parse(xhr.responseText);
-                                for (var i = 0; i < 2; i++) {
-                                    var button = Qt.createQmlObject('import QtQuick 2.0; Text { text: "' + locations.stations[i].name + '"; color: "blue"; MouseArea { anchors.fill: parent; onClicked: { textField1.text = "' + locations.stations[i].name + '";} } }', locationButtons1);
+                                for (var i = 0; i < 5; i++) {
+                                    var button = Qt.createQmlObject(`
+                                        import QtQuick 2.0;
+                                        Rectangle {
+                                            height: textField1.height*3/2;
+                                            width: textField1.width;
+                                            color: "lightblue";
+                                            border {
+                                                color: "black";
+                                                width: 1;
+                                            }
+                                            Text {
+                                                text: "${locations.stations[i].name}";
+                                                font.pointSize: parent.height/3;
+                                                anchors.verticalCenter: parent.verticalCenter;
+                                                anchors.left: parent.left;
+                                                anchors.leftMargin: 40;
+                                            }
+                                            MouseArea {
+                                                anchors.fill: parent;
+                                                onClicked: {
+                                                    textField1.text = "${locations.stations[i].name}";
+                                                    locationButtons1.visible = false;
+                                                }
+                                            }
+                                        }`, locationButtons1);
                                     var station = {
                                         name: locations.stations[i].name,
                                         id: locations.stations[i].id
@@ -90,7 +99,7 @@ Page {
                     xhr.open('GET', url);
                     xhr.send();
                 }
-                onAccepted: locationButtons1.visible = true
+                onAccepted: locationButtons1.visible = true;
             }
 
             Column {
@@ -102,6 +111,7 @@ Page {
                 width: parent.width - 20
                 placeholderText: "Arrival"
                 onTextChanged: {
+
                     for (var i = 0; i < locationButtons2.children.length; i++) {
                         locationButtons2.children[i].destroy();
                     }
@@ -113,8 +123,32 @@ Page {
                         if (xhr.readyState === XMLHttpRequest.DONE) {
                             try {
                                 var locations = JSON.parse(xhr.responseText);
-                                for (var i = 0; i < 2; i++) {
-                                    var button = Qt.createQmlObject('import QtQuick 2.0; Text { text: "' + locations.stations[i].name + '"; color: "blue"; MouseArea { anchors.fill: parent; onClicked: { textField2.text = "' + locations.stations[i].name + '"; } } }', locationButtons2);
+                                for (var i = 0; i < 5; i++) {
+                                    var button = Qt.createQmlObject(`
+                                        import QtQuick 2.0;
+                                        Rectangle {
+                                            height: textField2.height*3/2;
+                                            width: textField2.width;
+                                            color: "lightblue";
+                                            border{
+                                                color: "black";
+                                                width: 1;
+                                            }
+                                            Text {
+                                                text: "${locations.stations[i].name}";
+                                                font.pointSize: parent.height/3;
+                                                anchors.verticalCenter: parent.verticalCenter;
+                                                anchors.left: parent.left;
+                                                anchors.leftMargin: 40;
+                                            }
+                                            MouseArea {
+                                                anchors.fill: parent;
+                                                onClicked: {
+                                                    textField2.text = "${locations.stations[i].name}";
+                                                    locationButtons2.visible = false;
+                                                }
+                                            }
+                                        }`, locationButtons2);
                                     var station = {
                                         name: locations.stations[i].name,
                                         id: locations.stations[i].id
@@ -138,13 +172,18 @@ Page {
 
             Button {
                 id: searchButton
+                height: parent.width/8
+                width: parent.width/4
                 text: "search"
                 visible: true
+                font.pointSize: parent.width/30
+                font.bold: true
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                 }
                 background: Rectangle {
-                    color: "lightblue"
+                    color: "red"
+                    radius: parent.width/8
                 }
                 padding: 10
                 onClicked: {
