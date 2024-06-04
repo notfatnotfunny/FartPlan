@@ -8,6 +8,19 @@ Page{
     id: detailedSectionPage
     property var journey: []
 
+    ListModel{
+        id: journeyModel
+    }
+    Component.onCompleted: {
+        for (var i = 0; i < journey.passList.length; i++) {
+            journeyModel.append({
+                "arrival": journey.passList[i].arrival,
+                "departure": journey.passList[i].departure,
+                "station": journey.passList[i].station.name
+            });
+        }
+    }
+
     header: PageHeader{
         id: detailedSectionPageHeader
         // title: "Connection Details"
@@ -22,7 +35,7 @@ Page{
     ListView{
         id: detailedSectionPageList
         anchors.fill: parent
-        model: journey
+        model: journeyModel
         delegate: Item{
             width: parent.width
             height: detailedSectionPageHeader.height*3/2
@@ -36,15 +49,42 @@ Page{
                     width: 1
                 }
                 Column{
-                    // Text{
-                    //     text: model.arrival
-                    // }
-                    Text{
-                        text: model.station.name
+                    spacing: (journeyRectangle.height - firstJourneyRow.height - secondJourneyRow.height - thirdJourneyRow.height -20)/3
+                    Row{
+                        id: firstJourneyRow
+                        Text{
+                            id: arrivalText
+                            topPadding: 5
+                            leftPadding: 20
+                            text: model.arrival? model.arrival.slice(11,16) : "start"
+                            font.pointSize: detailedSectionPageHeader.height*5/20
+                        }
                     }
-                    // Text{
-                    //     text: model.departure
-                    // }
+                    Row{
+                        id: secondJourneyRow
+                        Text{
+                            id: stationText
+                            leftPadding: journeyRectangle.width/2 - stationText.width/4
+                            text: model.station
+                            font.pointSize: detailedSectionPageHeader.height*3/10
+                            font.bold: true
+                        }
+                    }
+                    Row{
+                        spacing: journeyRectangle.width-2*marginText.width - departureText.width-20
+                        id: thirdJourneyRow
+                        Text{
+                            id: marginText
+                            leftPadding: 20
+                            text: " "
+                        }
+                        Text{
+                            id: departureText
+                            bottomPadding: 5
+                            text: model.departure? model.departure.slice(11,16) : "end"
+                            font.pointSize: detailedSectionPageHeader.height*5/20
+                        }
+                    }
                 }
             }
         }

@@ -33,17 +33,19 @@ ApplicationWindow{
             }
 
             Column {
+                topPadding: 40
                 anchors {
                     top: header.bottom
                     left: parent.left
                     right: parent.right
                 }
 
-                spacing: 10
+                spacing: 20
 
                 TextField {
                     id: textField1
                     width: parent.width - 20
+                    height: header.height
                     placeholderText: "Departure"
                     onTextChanged: {
                         for (var i = 0; i < locationButtons1.children.length; i++) {
@@ -61,7 +63,7 @@ ApplicationWindow{
                                         var button = Qt.createQmlObject(`
                                             import QtQuick 2.0;
                                             Rectangle {
-                                                height: textField1.height*3/2;
+                                                height: header.height;
                                                 width: textField1.width;
                                                 color: "lightblue";
                                                 border {
@@ -107,6 +109,7 @@ ApplicationWindow{
                 TextField {
                     id: textField2
                     width: parent.width - 20
+                    height: header.height
                     placeholderText: "Arrival"
                     onTextChanged: {
                         for (var i = 0; i < locationButtons2.children.length; i++) {
@@ -124,7 +127,7 @@ ApplicationWindow{
                                         var button = Qt.createQmlObject(`
                                             import QtQuick 2.0;
                                             Rectangle {
-                                                height: textField2.height*3/2;
+                                                height: header.height;
                                                 width: textField2.width;
                                                 color: "lightblue";
                                                 border{
@@ -169,7 +172,7 @@ ApplicationWindow{
 
                 Button {
                     id: searchButton
-                    height: textField1.height*3/2
+                    height: header.height
                     width: textField1.width/4
                     text: "Search"
                     visible: true
@@ -212,11 +215,18 @@ ApplicationWindow{
                                             var section = connection.sections[j];
                                             if(j==0){
                                                 dynamicListModel.append({
+                                                    "category": section.journey? section.journey.category + " " + section.journey.number:"",
                                                     "timeDep": section.departure.departure.slice(11, 16),
+                                                    "delayDep": section.departure.delay,
                                                     "stationDep": section.departure.station.name,
                                                     "platformDep": section.departure.platform,
+
+
                                                     "sections": connection.sections,
+
+
                                                     "timeArr": connection.to.arrival.slice(11, 16),
+                                                    "delayArr": connection.to.delay,
                                                     "stationArr": connection.to.station.name,
                                                     "platformArr": connection.to.platform
                                                 })
@@ -236,11 +246,11 @@ ApplicationWindow{
                 ListView {
                     id: timeText
                     width: textField1.width + 20
-                    height: Math.max(dynamicListModel.count * (header.height * 3 / 2), parent.height / 2)
+                    height: Math.max(dynamicListModel.count * (header.height * 2), parent.height / 2)
                     model: dynamicListModel
                     delegate: Item {
                         width: parent.width
-                        height: header.height*3/2
+                        height: header.height*2
                         Rectangle {
                             id: rectangle
                             width: parent.width
@@ -251,28 +261,55 @@ ApplicationWindow{
                                 width: 1
                             }
                             Column{
+                                spacing: (rectangle.height - firstRow.height - secondRow.height - thirdRow.height -20)/3
                                 Row{
-                                    spacing: (rectangle.width - departureTime.width - arrow.width - arrivalTime.width)/2 -10
-                                    Text{
-                                        leftPadding: 20
+                                    topPadding: 10
+                                    id: firstRow
+                                    spacing: (rectangle.width - departureTime.width - arrowColumn.width - arrivalTime.width -10)/2
+                                    Row{
                                         id: departureTime
-                                        text: model.timeDep
-                                        font.pointSize: header.height*4/10
+                                        Text{
+                                            leftPadding: 20
+                                            text: model.timeDep
+                                            font.pointSize: header.height*3/10
+                                        }
+                                        Text{
+                                            text: (model.delayDep!=null && model.delayDep!=0)? "+" + model.delayDep:""
+                                            font.pointSize: header.height*3/10
+                                            color: "red"
+                                        }
                                     }
-                                    Image{
-                                        id: arrow
-                                        source: "arrow.png"
-                                        width: rectangle.width*5/9
-                                        height: rectangle.height/2
+                                    Column{
+                                        spacing: -arrow.height/2
+                                        id: arrowColumn
+                                        Text{
+                                            id: category
+                                            text: model.category
+                                            font.pointSize: header.height*3/10
+                                        }
+                                        Image{
+                                            id: arrow
+                                            source: "arrow.png"
+                                            width: rectangle.width*5/9
+                                            height: rectangle.height/2
+                                        }
                                     }
-                                    Text{
-                                        rightPadding: 20
+                                    Row{
                                         id: arrivalTime
-                                        text: model.timeArr
-                                        font.pointSize: header.height*4/10
+                                        Text{
+                                            rightPadding: 20
+                                            text: model.timeArr
+                                            font.pointSize: header.height*3/10
+                                        }
+                                        Text{
+                                            text: (model.delayArr!=null && model.delayArr!=0)? "+" + model.delayArr:""
+                                            font.pointSize: header.height*3/10
+                                        }
                                     }
                                 }
                                 Row{
+                                    id: secondRow
+                                    bottomPadding: (rectangle.height - firstRow.height - arrivalStation.height)/3 + arrivalStation.height
                                     spacing: rectangle.width - departureStation.width - arrivalStation.width - 10
                                     Text{
                                         leftPadding: 20
@@ -288,18 +325,20 @@ ApplicationWindow{
                                     }
                                 }
                                 Row{
+                                    id: thirdRow
+                                    bottomPadding: 10
                                     spacing: rectangle.width - departurePlatform.width - arrivalPlatform.width - 10
                                     Text{
                                         leftPadding: 20
                                         id: departurePlatform
                                         text: model.platformDep
-                                        font.pointSize: header.height*3/10
+                                        font.pointSize: header.height*5/20
                                     }
                                     Text{
                                         rightPadding: 20
                                         id: arrivalPlatform
                                         text: model.platformArr
-                                        font.pointSize: header.height*3/10
+                                        font.pointSize: header.height*5/20
                                     }
                                 }
                             }
