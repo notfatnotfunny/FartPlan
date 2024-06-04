@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fartplan.dplozner\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-31 00:24+0000\n"
+"POT-Creation-Date: 2024-06-04 19:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../qml/Main.qml:33 ../qml/diocane.qml:33 ../qml/porcodio.qml:18
-#: fartplan.desktop.in.h:1
+#: ../qml/Main.qml:29 fartplan.desktop.in.h:1
 msgid "fartplan"
 msgstr ""
