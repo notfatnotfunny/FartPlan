@@ -1,5 +1,7 @@
 # fartplan
 
+FartPlan is a swiss public transports schedule app that uses the public API `http://transport.opendata.ch`. This is NOT an official SBB app! It was designed to work on Ubuntu touch (can find more at `https://open-store.io/app/fartplan.dplozner`), but given the versatility of QML it might be used/adapted/embedded pretty much everywhere.
+
 ## License
 
 Copyright (C) 2024  Davide Plozner
