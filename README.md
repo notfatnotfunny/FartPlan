@@ -1,7 +1,5 @@
 # fartplan
 
-fahr plan
-
 ## License
 
 Copyright (C) 2024  Davide Plozner
